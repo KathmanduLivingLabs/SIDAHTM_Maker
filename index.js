@@ -8,10 +8,16 @@ var schoolData;
 var schoolLabels;
 var buildingData;
 var buildingElementsData;
+var outputFilePrefix;
+var jsonIndex;
+var districtLabel = 'District:';
+var vdcLabel = 'VDC / Municipality';
 
 if(process.argv[4].toLowerCase().trim() === 'school') {
 	outputFilePrefix = 'school';
 	jsonIndex = 'general_detail/emis/school_emis';
+	districtLabel = '1.1) District:';
+	vdcLabel = '1.2) VDC / Municipality';
 } else if(process.argv[4].toLowerCase().trim() == 'buildings') {
 	outputFilePrefix = 'buildings';
 	jsonIndex = 'building_assessment/general_building_info/general_building_info_1/building_code/building_ref_no';
@@ -24,18 +30,18 @@ if(process.argv[4].toLowerCase().trim() === 'school') {
 var IMAGE_URL = 'http://ona.io/api/v1/files/615342?filename=wbsida321/attachments/';
 
 //second argument label maps
-schoolLabels = fs.readFileSync(process.argv[3], 'utf8');
+schoolLabels = fs.readFileSync('files/' + process.argv[3], 'utf8');
 //schoolLabels = fs.readFileSync('school_label.json', 'utf8');
 schoolLabels =  JSON.parse(schoolLabels);
 
 //first argument data file
-schoolData = fs.readFileSync(process.argv[2], 'utf8');
+schoolData = fs.readFileSync('files/' + process.argv[2], 'utf8');
 //schoolData = fs.readFileSync('school.json', 'utf8');
 schoolData = JSON.parse(schoolData);
 
-var district_codes = fs.readFileSync('district_codes.json', 'utf8');
+var district_codes = fs.readFileSync('files/district_codes.json', 'utf8');
 district_codes = JSON.parse(district_codes);
-var vdc_codes = fs.readFileSync('vdc_codes.json', 'utf8');
+var vdc_codes = fs.readFileSync('files/vdc_codes.json', 'utf8');
 vdc_codes = JSON.parse(vdc_codes);
 
 var count = 0;
@@ -74,17 +80,17 @@ allKeys = Object.keys(schoolItem);
 									if(repeatedItem[insideKeys[j]].toString().toLowerCase().indexOf('jpg') !== -1) {
 										trHTML += '<tr><td colspan=2>' + schoolLabels[k].label + '</td></tr>';
 										trHTML += '<tr><td colspan=2 style="text-align: center;">' +
-															'<image src="placeholder.png" width="300" height="300" /></td></tr>';
+															'<image src="../../files/placeholder.png" width="300" height="300" /></td></tr>';
 									}
 									else {
-										if(schoolLabels[k].label === 'District:') {
+										if(schoolLabels[k].label === districtLabel) {
 											for(var a = 0; a < district_codes.length; a++) {
 												if(repeatedItem[insideKeys[j]] === district_codes[a].codes) {
 														trHTML += '<tr><td>' + schoolLabels[k].label + '</td><td>' + district_codes[a].name + '</td></tr>';
 												}
 											}
 
-										} else if(schoolLabels[k].label === 'VDC / Municipality') {
+										} else if(schoolLabels[k].label === vdcLabel) {
 											for(var a = 0; a < vdc_codes.length; a++) {
 												if(repeatedItem[insideKeys[j]] === vdc_codes[a].codes) {
 														trHTML += '<tr><td>' + schoolLabels[k].label + '</td><td>' + vdc_codes[a].name + '</td></tr>';
@@ -109,17 +115,17 @@ allKeys = Object.keys(schoolItem);
 				if(schoolItem[allKeys[i]].toString().toLowerCase().indexOf('jpg') !== -1) {
 					trHTML += '<tr><td colspan=2>' + labelItem.label + '</td></tr>';
 					trHTML += '<tr><td colspan=2 style="text-align: center;">' +
-										'<image src="placeholder.png" width="300" height="300" /></td></tr>';
+										'<image src="../../files/placeholder.png" width="300" height="300" /></td></tr>';
 				}
 				else {
-					if(labelItem.label === 'District:') {
+					if(labelItem.label === districtLabel) {
 						for(var a = 0; a < district_codes.length; a++) {
 							if(schoolItem[allKeys[i]] === district_codes[a].codes) {
 								trHTML += '<tr><td>' + labelItem.label + '</td><td>' + district_codes[a].name + '</td></tr>';
 							}
 						}
 
-					} else if(labelItem.label === 'VDC / Municipality') {
+					} else if(labelItem.label === vdcLabel) {
 						for(var a = 0; a < vdc_codes.length; a++) {
 							if(schoolItem[allKeys[i]] === vdc_codes[a].codes) {
 								trHTML += '<tr><td>' + labelItem.label + '</td><td>' + vdc_codes[a].name + '</td></tr>';
@@ -134,7 +140,7 @@ allKeys = Object.keys(schoolItem);
 		}
 	});
 	++count;
-	lastSubmissionTime = fs.readFileSync('last_submission_time.txt', 'utf8').trim();
+	lastSubmissionTime = fs.readFileSync('files/last_submission_time.txt', 'utf8').trim();
 	lastSubmissionTime = new Date(lastSubmissionTime);
 	var currentSubmissionTime = schoolItem["_submission_time"].split('T')[0];
 	var sub = schoolItem["_submission_time"].split('T')[0];
@@ -152,4 +158,4 @@ allKeys = Object.keys(schoolItem);
 	trHTML = '';
 	lastSubmissionTime = schoolItem["_submission_time"].split('T')[0];
 });
-fs.writeFileSync('last_submission_time.txt', lastSubmissionTime);
+fs.writeFileSync('files/last_submission_time.txt', lastSubmissionTime);
