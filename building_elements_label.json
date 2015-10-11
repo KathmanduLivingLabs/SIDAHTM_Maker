@@ -29,7 +29,7 @@
 ,
 {"name":"stories","label":"stories","repeate":"0"}
 ,
-{"name":"storey_structural_typology","label":"storey_structural_typology","repeate":"piece_assessment/storey_structural_typology"}
+{"name":"storey_structural_typology_count","label":"storey_structural_typology","repeate":"piece_assessment/storey_structural_typology"}
 ,
 {"name":"storey","label":"storey","repeate":"0"}
 ,

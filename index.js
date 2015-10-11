@@ -147,7 +147,6 @@ allKeys = Object.keys(schoolItem);
 		}
 		var outfile = 'output_' + outputFilePrefix + '/' + outputFilePrefix + sub + '/' + outputFilePrefix  + 
 				schoolItem[jsonIndex] + '.html';
-	//var outfile = 'output' + '/school' + schoolItem['general_detail/emis/school_emis'] + '.html';
 		fs.writeFileSync(outfile, headerHTML + styles + tableHTML + trHTML + footerHTML);
 	}
 	trHTML = '';
